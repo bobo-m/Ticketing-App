@@ -19,10 +19,15 @@ import {
 import { Button } from "./ui/button";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { Ticket } from "@prisma/client";
 
 type TicketFormData = z.infer<typeof ticketSchema>;
 
-const TicketForm = () => {
+interface Props {
+  ticket?: Ticket;
+}
+
+const TicketForm = ({ ticket }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
@@ -33,8 +38,13 @@ const TicketForm = () => {
   async function onSubmit(values: TicketFormData) {
     try {
       setIsSubmitting(true);
+
       setError("");
-      await axios.post("/api/tickets", values);
+      if (ticket) {
+        await axios.patch("/api/tickets/" + ticket.id, values);
+      } else {
+        await axios.post("/api/tickets", values);
+      }
       setIsSubmitting(false);
       router.push("/tickets");
       router.refresh();
@@ -52,6 +62,7 @@ const TicketForm = () => {
           <FormField
             control={form.control}
             name="title"
+            defaultValue={ticket?.title}
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Ticket Title</FormLabel>
@@ -64,6 +75,7 @@ const TicketForm = () => {
           <Controller
             name="description"
             control={form.control}
+            defaultValue={ticket?.description}
             render={({ field }) => (
               <SimpleMDE placeholder="Description" {...field} />
             )}
@@ -72,6 +84,7 @@ const TicketForm = () => {
             <FormField
               control={form.control}
               name="status"
+              defaultValue={ticket?.status}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Status</FormLabel>
@@ -96,6 +109,7 @@ const TicketForm = () => {
             <FormField
               control={form.control}
               name="priority"
+              defaultValue={ticket?.priority}
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Priority</FormLabel>
@@ -119,7 +133,7 @@ const TicketForm = () => {
             />
             <span className="flex justify-self-end ml-auto items-end">
               <Button type="submit" disabled={isSubmitting}>
-                Submit
+                {ticket ? "Update Ticket" : "Create Ticket"}
               </Button>
             </span>
           </div>

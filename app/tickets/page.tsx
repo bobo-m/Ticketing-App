@@ -4,11 +4,12 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import Pagination from "@/components/Pagination";
 import StatusFilter from "@/components/StatusFilter";
-import { Status } from "@prisma/client";
+import { Status, Ticket } from "@prisma/client";
 
-interface SearchParms {
+export interface SearchParms {
   page: string;
   status: Status;
+  orderBy: keyof Ticket;
 }
 
 const Tickets = async ({ searchParams }: { searchParams: SearchParms }) => {
@@ -46,7 +47,7 @@ const Tickets = async ({ searchParams }: { searchParams: SearchParms }) => {
         </Link>
         <StatusFilter />
       </div>
-      <DataTable tickets={tickets} />
+      <DataTable tickets={tickets} searchParams={searchParams} />
       <Pagination
         itemCount={ticketCount}
         pageSize={pageSize}

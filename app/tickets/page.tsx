@@ -29,11 +29,19 @@ const Tickets = async ({ searchParams }: { searchParams: SearchParms }) => {
       NOT: [{ status: "CLOSED" as Status }],
     };
   }
+  const order = searchParams.orderBy;
+  let orderBy = {};
+  if (order) {
+    orderBy = {
+      [order]: "desc",
+    };
+  }
   const ticketCount = await prisma.ticket.count({ where });
   const tickets = await prisma.ticket.findMany({
     where,
     take: pageSize,
     skip: (page - 1) * pageSize,
+    orderBy,
   });
 
   return (

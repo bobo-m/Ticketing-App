@@ -12,7 +12,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   const validation = userSchema.safeParse(body);
 
   if (!validation.success) {
-    return NextResponse.json(validation.error.format(), { status: 400 });
+    return NextResponse.json({ error: "Validation Error" }, { status: 400 });
   }
 
   const user = await prisma.user.findUnique({
@@ -35,8 +35,9 @@ export async function PATCH(request: NextRequest, { params }: Props) {
       where: { username: body.username },
     });
     if (duplicateUsername) {
-      return (
-        NextResponse.json({ message: "Duplicate Username" }), { status: 409 }
+      return NextResponse.json(
+        { message: "Duplicate Username" },
+        { status: 409 }
       );
     }
   }

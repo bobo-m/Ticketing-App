@@ -21,7 +21,7 @@ export async function PATCH(request: NextRequest, { params }: Props) {
   const validation = ticketPatchSchema.safeParse(body);
 
   if (!validation.success) {
-    return NextResponse.json(validation.error.format(), { status: 400 });
+    return NextResponse.json({ error: "Validation Error" }, { status: 400 });
   }
   const ticket = await prisma.ticket.findUnique({
     where: { id: parseInt(params.id) },

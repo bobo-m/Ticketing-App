@@ -30,6 +30,7 @@ const DeleteButton = ({ ticketId }: { ticketId: number }) => {
       setIsDeleting(false);
     } catch (error) {
       setIsDeleting(false);
+      console.log(error);
       setError("Unknown Error Occured");
     }
   };

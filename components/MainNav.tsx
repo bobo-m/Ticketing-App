@@ -11,7 +11,7 @@ const MainNav = async () => {
       <div className="flex items-center gap-2">
         <Link href="/">Dashboard</Link>
         <Link href="/tickets">Tickets</Link>
-        {session && session.user.user == "ADMIN" && (
+        {session && session.user.role === "ADMIN" && (
           <Link href="/users">Users</Link>
         )}
       </div>
